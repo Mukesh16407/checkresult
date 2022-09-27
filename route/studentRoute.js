@@ -31,3 +31,5 @@ router.post('/add-student',authMiddleware,async(req,res)=>{
 
     }
 })
+
+module.exports = router;
