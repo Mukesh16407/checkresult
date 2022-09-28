@@ -15,7 +15,6 @@ export const Register = () => {
     try{
       dispatch(ShowLoading());
       const response = await axios.post("/api/employee/register", values);
-      console.log(response)
        dispatch(HideLoading());
        if (response.data.success) {
         toast.success(response.data.message);

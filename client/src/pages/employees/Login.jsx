@@ -1,11 +1,37 @@
 import React from 'react'
 import { Form, Input } from "antd";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { HideLoading, ShowLoading } from '../../Redux/alerts';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 export const Login = () => {
+    const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const onFinish =async(values)=>{
+    try{
+        dispatch(ShowLoading());
+        const response = await axios.post("/api/employee/login", values);
+        dispatch(HideLoading());
+
+        if(response.data.success){
+            toast.success(response.data.message);
+            localStorage.setItem("token", response.data.data);
+            navigate("/employee");
+        }else {
+            toast.error(response.data.message);
+        }
+    }catch(error){
+      
+      dispatch(HideLoading());
+      toast.error(error.message);
+    }
+  }
   return (
     <div className="primary d-flex align-items-center justify-content-center h-screen">
-        <Form layout="vertical w-400 white p-4">
+        <Form layout="vertical w-400 white p-4" onFinish={onFinish}>
         <h1 className="text-medium"><b>CHECK RESULTS</b></h1>
         <hr />
         <h1 className="text-medium">Employee - Login</h1>
