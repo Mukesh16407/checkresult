@@ -20,3 +20,5 @@ router.post("/register", authMiddleware, async (req, res) => {
     const salt = await bcrypt.genSalt(10);
   } catch (error) {}
 });
+
+module.exports = router;
