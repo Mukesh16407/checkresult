@@ -10,19 +10,26 @@ import { Students } from "./pages/employees/Students";
 import { Results } from "./pages/employees/Results";
 import { AddStudent } from "./pages/employees/AddStudent";
 import { AddResult } from "./pages/employees/AddResult";
+import {Spinner} from './components/Spinner'
+import { useSelector } from "react-redux";
+import { PublicRoute } from "./components/PublicRoute";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+
 function App() {
+  const { loading } = useSelector((state) => state.alert);
   return (
     <div  >
+      {loading ? <Spinner /> : null}
        <Toaster />
       <Routes>
         <Route path="/" element={<Home/>}/>
-        <Route path="/login" element={<Login/>}/>
-        <Route path="/register" element={<Register/>}/>
-        <Route path="/employee" element={<EmployeeHome />} />
-        <Route path="/employee/students" element={<Students />} />
-        <Route path="/employee/results" element={<Results />} />
-        <Route path="/employee/students/add" element={<AddStudent />} />
-        <Route path="/employee/results/add" element={<AddResult />} />
+        <Route path="/login" element={  <PublicRoute><Login/></PublicRoute>}/>
+        <Route path="/register" element={  <PublicRoute><Register/></PublicRoute>}/>
+        <Route path="/employee" element={ <ProtectedRoute><EmployeeHome /></ProtectedRoute>} />
+        <Route path="/employee/students" element={ <ProtectedRoute><Students /></ProtectedRoute>} />
+        <Route path="/employee/students/add" element={ <ProtectedRoute><AddStudent /></ProtectedRoute>} />
+        <Route path="/employee/results" element={ <ProtectedRoute><Results /></ProtectedRoute>} />
+        <Route path="/employee/results/add" element={<ProtectedRoute><AddResult /></ProtectedRoute>} />
       </Routes>
     </div>
   );
