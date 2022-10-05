@@ -24,18 +24,20 @@ export const Home = () => {
           </h1>
         </div>
       </div>
-      {results.length > 0 ?(
-        <Row gutter={[20, 20]}>
+      {results.length > 0 ? (
+        <Row  gutter={[20, 20]}>
           <Col span={24}>
           <h1 className="text-large my-3">Welcome to CHECK RESULTS </h1>
+
           <h1 className="text-medium my-3">
               Select Your Examination From Below..{" "}
-            </h1>
-            <hr />
-            {results.map((result) =>{
-              return(
-               <Col span={8}>
-                <div className="card p-2 cursor-pointer primary-border"
+          </h1>
+          <hr />
+          </Col>
+          {results.map((result)=>{
+            return(
+              <Col span={8}>
+                <div   className="card p-2 cursor-pointer primary-border"
                   onClick={() => {
                     navigate(`/result/${result._id}`);
                   }}>
@@ -44,17 +46,17 @@ export const Home = () => {
                   <h1 className="text-small">Class : {result.class}</h1>
 
                 </div>
-              
-              );
-            })}
-
-          </Col>
+              </Col>
+            )
+          })}
 
         </Row>
-
       ):(
-
+        <div className="d-flex align-items-center justify-content-center mt-5 pt-5">
+          <h1 className="text-medium">No Results Found</h1>
+        </div>
       )}
+        
     </div>
   )
 }
