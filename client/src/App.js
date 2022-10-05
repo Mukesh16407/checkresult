@@ -14,6 +14,7 @@ import {Spinner} from './components/Spinner'
 import { useSelector } from "react-redux";
 import { PublicRoute } from "./components/PublicRoute";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { ResultCheck } from "./pages/ResultCheck";
 
 function App() {
   const { loading } = useSelector((state) => state.alert);
@@ -30,6 +31,7 @@ function App() {
         <Route path="/employee/students/add" element={ <ProtectedRoute><AddStudent /></ProtectedRoute>} />
         <Route path="/employee/results" element={ <ProtectedRoute><Results /></ProtectedRoute>} />
         <Route path="/employee/results/add" element={<ProtectedRoute><AddResult /></ProtectedRoute>} />
+        <Route path="/check-result"element={<ProtectedRoute><ResultCheck/> </ProtectedRoute>}/>
       </Routes>
     </div>
   );
