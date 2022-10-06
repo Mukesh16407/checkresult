@@ -82,4 +82,36 @@ router.post('/login', async(req,res)=>{
   }
 })
 
+// get employee by id
+
+router.post('/get-employee-by-id',authMiddleware,async(req,res)=>{
+
+  try{
+    console.log(req.body);
+    const employee = await Employee.findOne({
+      _id: req.body.employeeId,
+    });
+  if (!employee) {
+    return res.status(200).send({
+      message: "Employee not found",
+      success: false,
+  });
+  }
+  employee.password = undefined;
+  res.status(200).send({
+    message: "Employee found",
+    success: true,
+    data: employee,
+  })
+
+  }catch(error){
+
+    res.status(500).send({
+      message: error.message,
+      success: false,
+    });
+
+  }
+})
+
 module.exports = router;
