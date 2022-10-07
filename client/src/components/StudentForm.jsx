@@ -1,9 +1,51 @@
 import React from 'react'
 import { Col, Form, Row } from "antd";
-export const StudentForm = () => {
+import { useDispatch } from "react-redux";
+import { useNavigate } from 'react-router-dom';
+import { ShowLoading, HideLoading } from "../Redux/alerts";
+import axios from 'axios';
+import toast from 'react-hot-toast';
+export const StudentForm = ({student,type}) => {
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const onFinish=async(values)=>{
+
+    try{
+      dispatch(ShowLoading());
+      let response = null;
+      if (type === "edit") {
+        response = await axios.post(`/api/student/update-student/${student.rollNo}`, values, {
+           headers: {
+             Authorization: `Bearer ${localStorage.getItem("token")}`,
+           },
+         });
+       } else {
+        response = await axios.post("/api/student/add-student", values, {
+           headers: {
+             Authorization: `Bearer ${localStorage.getItem("token")}`,
+           },
+         });
+       }
+       dispatch(HideLoading());
+      if (response.data.success) {
+        toast.success(response.data.message);
+        navigate("/employee/students");
+      } else {
+        toast.error(response.data.message);
+      }
+
+    }catch(error){
+      dispatch(HideLoading());
+      toast.error(error.message);
+
+    }
+  }
+  
   return (
     <div>
-      <Form layout="vertical">
+      <Form layout="vertical" onFinish={onFinish} initialValues={student}>
         <Row gutter={[10, 10]}>
         <Col span={8}>
             <Form.Item label="First Name" name="firstName">
@@ -17,7 +59,7 @@ export const StudentForm = () => {
           </Col>
           <Col span={8}>
             <Form.Item label="Roll No" name="rollNo">
-              <input type="number" />
+              <input type="number"disabled={type==='edit' ? true : false} />
             </Form.Item>
           </Col>
           <Col span={8}>

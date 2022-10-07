@@ -1,11 +1,74 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Table } from 'antd';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { PageTitle } from '../../components/PageTitle';
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { HideLoading, ShowLoading } from "../../Redux/alerts";
+
 
 export const Students = () => {
-    const navigate = useNavigate();
-    const [students, setStudents] = useState([]);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [students, setStudents] = useState([]);
+
+  const getStudents = async (values) => {
+
+    try{
+      dispatch(ShowLoading());
+      const response = await axios.post(
+        "/api/student/get-all-students",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      dispatch(HideLoading());
+      if (response.data.success) {
+        setStudents(response.data.data);
+      } else {
+        toast.error(response.data.message);
+      }
+
+    }catch(error){
+      dispatch(HideLoading());
+      toast.error(error.message);
+
+    }
+  }
+  const deleteStudent = async (rolNo) => {
+    try {
+      dispatch(ShowLoading());
+      const response = await axios.post(
+        `/api/student/delete-student/${rolNo}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      dispatch(HideLoading());
+      if (response.data.success) {
+        getStudents();
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      dispatch(HideLoading());
+      toast.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    getStudents();
+  }, []);
 
     const columns = [
         {
@@ -45,7 +108,9 @@ export const Students = () => {
             <div className="d-flex gap-3">
               <i
                 className="ri-delete-bin-line"
-               
+                onClick={() => {
+                  deleteStudent(record.rollNo);
+                }}
               ></i>
               <i
                 className="ri-pencil-line"
