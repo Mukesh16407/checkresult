@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-
+import { HideLoading, ShowLoading } from "../Redux/alerts";
+import axios from "axios";
+import toast from "react-hot-toast";
 export const ResultCheck = () => {
   const navigate = useNavigate();
 
@@ -10,6 +13,78 @@ export const ResultCheck = () => {
   const [studentResult, setStudentResult] = useState(null);
   const dispatch = useDispatch();
   const params = useParams();
+
+  const getResult = async (values) => {
+
+    try{
+      dispatch(ShowLoading());
+      const response = await axios.post(
+        `/api/results/get-result/${params.resultId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      dispatch(HideLoading());
+      if (response.data.success) {
+        setResult(response.data.data);
+      } else {
+        toast.error(response.data.message);
+      }
+
+    }catch(error){
+      dispatch(HideLoading());
+      toast.error(error.message);
+    }
+  }
+
+  const getStudentResult = async (values) => {
+    try {
+      dispatch(ShowLoading());
+      const response = await axios.post(
+        `/api/results/get-student-result`,
+        {
+          rollNo: rollNo,
+          resultId: params.resultId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      dispatch(HideLoading());
+      if (response.data.success) {
+        setStudentResult(response.data.data);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      dispatch(HideLoading());
+      toast.error(error.message);
+    }
+  };
+  useEffect(() => {
+    if (!result) {
+      getResult();
+    }
+  }, []);
+
+  const getPercentage = () => {
+    let totalMarks = 0;
+    let obtainedMarks = 0;
+    result.subjects.forEach((subject) => {
+      totalMarks += Number(subject.totalMarks);
+    });
+    console.log(totalMarks);
+    Object.keys(studentResult.obtainedMarks).forEach((key) => {
+      obtainedMarks += Number(studentResult.obtainedMarks[key]);
+    });
+    console.log(obtainedMarks);
+    return (obtainedMarks / totalMarks) * 100;
+  };
   return (
     <div className="p-5">
       <div className="header d-flex justify-content-between align-items-center">
@@ -45,7 +120,9 @@ export const ResultCheck = () => {
     />
      <button
           className="primary px-5 text-white"
-         
+          onClick={() => {
+            getStudentResult();
+          }}
         >
           Get Result
         </button>
@@ -86,7 +163,8 @@ export const ResultCheck = () => {
             }}
             className="p-3 w-50">
                 <h1 className="text-white text-center text-medium">
-              Percentage : 
+              Percentage : {getPercentage().toFixed(2)} % , Verdict :{" "}
+              {studentResult?.verdict?.toUpperCase()}
             </h1>
 
             </div>
