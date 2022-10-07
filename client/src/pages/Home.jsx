@@ -1,11 +1,49 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Col, Row } from 'antd';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { ShowLoading, HideLoading } from "../Redux/alerts";
 
 export const Home = () => {
-
+  const dispatch = useDispatch();
   const [results, setResults] = useState([]);
+
   const navigate = useNavigate();
+
+  const getResults =async(values)=>{
+    
+    try{
+      dispatch(ShowLoading());
+      const response = await axios.post(
+        "/api/results/get-all-results",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      dispatch(HideLoading());
+      if (response.data.success) {
+        setResults(response.data.data);
+      } else {
+        toast.error(response.data.message);
+      }
+
+    }catch(error){
+      dispatch(HideLoading());
+      toast.error(error.message);
+
+    }
+  }
+  useEffect(() => {
+    if (results.length === 0) {
+      getResults();
+    }
+  }, []);
   return (
     <div className="p-5">
       <div className="header d-flex justify-content-between align-items-center py-3">
