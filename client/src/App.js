@@ -16,6 +16,7 @@ import { PublicRoute } from "./components/PublicRoute";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { ResultCheck } from "./pages/ResultCheck";
 import { EditStudents } from "./pages/employees/EditStudent";
+import { EditResult } from "./pages/employees/EditResult";
 
 function App() {
   const { loading } = useSelector((state) => state.alert);
@@ -35,6 +36,8 @@ function App() {
         <Route path="/employee/results" element={ <ProtectedRoute><Results /></ProtectedRoute>} />
         <Route path="/employee/results/add" element={<ProtectedRoute><AddResult /></ProtectedRoute>} />
         <Route path="/check-result"element={<ProtectedRoute><ResultCheck/> </ProtectedRoute>}/>
+        <Route path="/employee/results/edit/:resultId"element={<ProtectedRoute><EditResult/></ProtectedRoute> } />
+       
       </Routes>
     </div>
   );
