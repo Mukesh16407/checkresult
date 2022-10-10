@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { ShowLoading, HideLoading } from "../Redux/alerts";
 import axios from 'axios';
 import toast from 'react-hot-toast';
+
 export const StudentForm = ({student,type}) => {
 
   const dispatch = useDispatch();
