@@ -201,7 +201,7 @@ export const EditResult = () => {
                 </thead>
                 <tbody>
                   {result?.subjects?.map((subject, index) => (
-                    <tr>
+                    <tr key={index}>
                       <td>{subject?.name}</td>
                       <td>{subject?.totalMarks}</td>
                       <td>
