@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { HideLoading, ShowLoading } from "../../Redux/alerts";
 import axios from "axios";
