@@ -27,3 +27,5 @@
 ![Screenshot (10)](https://user-images.githubusercontent.com/66511917/194810753-3c229b09-3545-4ab4-bd64-ef1728765b79.png)
 ##### Search student result
 ![Screenshot (11)](https://user-images.githubusercontent.com/66511917/194810793-3b1da1ea-3a1f-4800-9696-17b1c79d89a5.png)
+##### show result
+![Screenshot (13)](https://user-images.githubusercontent.com/66511917/194831189-c45484d0-82db-4522-8f83-aed9052ed319.png)
